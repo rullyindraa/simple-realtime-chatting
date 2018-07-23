@@ -38,7 +38,7 @@ fs.readFile('config.json', 'utf-8', function(err, data) {
   });
 });
 
-var port = process.env.port || 8080;
+var port = process.env.PORT || 8080;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyparser.urlencoded({
