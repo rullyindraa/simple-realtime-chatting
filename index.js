@@ -4,9 +4,10 @@ const path = require('path');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const dsn = process.env.dsn;
 
 const raven = require('raven');
-raven.config('https://e943b74c7da045eb86f4cb965aad505d@sentry.io/1247867').install();
+raven.config(dsn).install();
 
 const fs = require('fs');
 var config = '';
@@ -109,12 +110,13 @@ app.get('/get_chatters', function(req, res) {
 });
 
 app.use(raven.requestHandler());
-app.use(raven.errorHandler());
 
-app.get('*', function mainHandler(req, res) {
+app.get('*', function(req, res) {
   raven.captureException("err");
   res.send('Page Not Found');
 });
+
+app.use(raven.errorHandler());
 
 io.on('connection', function(socket) {
   socket.on('message', function(data) {
