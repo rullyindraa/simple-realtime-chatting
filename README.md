@@ -12,4 +12,4 @@ This project is about application simple realtime chatting using Node.js, Redis,
 - Run `source sentry.env`.
 - Run `npm run start`.
 - Run `http://localhost:3000/`in your browser.
-- [A demo application is available here.](https://realtime-chatting-using-redis.herokuapp.com/)
+- [A demo application is available here.](https://simple-realtime-chatting.herokuapp.com/)
