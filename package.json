@@ -13,6 +13,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "raven": "^2.6.3",
     "redis": "^2.8.0",
     "socket.io": "^2.1.1"
   },

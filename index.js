@@ -3,7 +3,10 @@ const bodyparser = require('body-parser');
 const path = require('path');
 const app = express();
 const http = require('http').Server(app);
-var io = require('socket.io')(http);
+const io = require('socket.io')(http);
+
+const raven = require('raven');
+raven.config('https://e943b74c7da045eb86f4cb965aad505d@sentry.io/1247867').install();
 
 const fs = require('fs');
 var config = '';
@@ -38,12 +41,13 @@ fs.readFile('config.json', 'utf-8', function(err, data) {
   });
 });
 
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyparser.urlencoded({
   extended: true
 }));
+app.use(raven.requestHandler());
 
 var chatters = [];
 
@@ -51,6 +55,12 @@ var chat_messages = [];
 
 http.listen(port, function() {
   console.log('Server listening on ' + port);
+});
+
+app.use(raven.errorHandler());
+app.use(function onError(err, req, res, next) {
+  res.status = 500;
+  res.end(res.sentry + '\n');
 });
 
 app.get('/', function (req, res) {
@@ -103,6 +113,12 @@ app.get('/get_messages', function(req, res) {
 
 app.get('/get_chatters', function(req, res) {
   res.send(chatters);
+});
+
+app.get('*', function mainHandler(req, res) {
+  throw new Error('Page not found');
+  res.send('Page Not Found');
+  res.end();
 });
 
 io.on('connection', function(socket) {
