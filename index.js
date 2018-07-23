@@ -4,16 +4,32 @@ const path = require('path');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const dsn = process.env.dsn;
-
-const raven = require('raven');
-raven.config(dsn).install();
-
 const fs = require('fs');
+const redis = require('redis');
+const Raven = require('raven');
+
+const dsn = process.env.dsn;
+Raven.config(dsn).install();
+
 var config = '';
 
-const redis = require('redis');
 var client = '';
+
+var port = process.env.PORT || 3000;
+
+app.use(Raven.requestHandler());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyparser.urlencoded({
+  extended: true
+}));
+
+http.listen(port, function() {
+  console.log('Server listening on ' + port);
+});
+
+var chatters = [];
+
+var chat_messages = [];
 
 fs.readFile('config.json', 'utf-8', function(err, data) {
   if (err) throw err;
@@ -42,19 +58,9 @@ fs.readFile('config.json', 'utf-8', function(err, data) {
   });
 });
 
-var port = process.env.PORT || 3000;
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyparser.urlencoded({
-  extended: true
-}));
-
-var chatters = [];
-
-var chat_messages = [];
-
-http.listen(port, function() {
-  console.log('Server listening on ' + port);
+app.use(function onError(err, req, res, next) {
+  res.statusCode = 500;
+  res.end(res.sentry + '\n');
 });
 
 app.get('/', function (req, res) {
@@ -109,14 +115,12 @@ app.get('/get_chatters', function(req, res) {
   res.send(chatters);
 });
 
-app.use(raven.requestHandler());
-
 app.get('*', function(req, res) {
-  raven.captureException("err");
+  Raven.captureException("err");
   res.send('Page Not Found');
 });
 
-app.use(raven.errorHandler());
+app.use(Raven.errorHandler());
 
 io.on('connection', function(socket) {
   socket.on('message', function(data) {
