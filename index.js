@@ -47,7 +47,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyparser.urlencoded({
   extended: true
 }));
-app.use(raven.requestHandler());
 
 var chatters = [];
 
@@ -55,12 +54,6 @@ var chat_messages = [];
 
 http.listen(port, function() {
   console.log('Server listening on ' + port);
-});
-
-app.use(raven.errorHandler());
-app.use(function onError(err, req, res, next) {
-  res.status = 500;
-  res.end(res.sentry + '\n');
 });
 
 app.get('/', function (req, res) {
@@ -115,10 +108,12 @@ app.get('/get_chatters', function(req, res) {
   res.send(chatters);
 });
 
+app.use(raven.requestHandler());
+app.use(raven.errorHandler());
+
 app.get('*', function mainHandler(req, res) {
-  throw new Error('Page not found');
+  raven.captureException("err");
   res.send('Page Not Found');
-  res.end();
 });
 
 io.on('connection', function(socket) {

@@ -8,14 +8,11 @@
   width: 781px;
   height: 240px;
   max-height: 200px;
+  border-radius: 5px;
   overflow: auto;
   word-wrap: break-word;
   overflow-x: hidden;
 }
-
-/* #message {
-  background-color: #f9f9f9;
-} */
 
 .chat {
   display: none;
