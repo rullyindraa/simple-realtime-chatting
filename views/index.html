@@ -1,28 +1,36 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Node.js + Socket.io + Redis Chat | ScaleGrid</title>
-    <link rel="stylesheet" href="css/main.css">
+  <meta charset="UTF-8">
+  <title>Wonderlabs Academy Batch #1</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<div class="container">
-    <h1>Node.js + Socket.io + Redis Chat | ScaleGrid</h1>
-    <div class="join-chat">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"/>
-        <input type="button" id="join-chat" value="Join Chat"/>
-    </div>
-    <br/>
-    <div class="chat-info"></div>
-    <br/>
-    <div class="chat">
-        <div class="messages"></div>
-        <textarea name="message" id="message" cols="90" rows="5"
-                  placeholder="Enter your message..."></textarea><br/><br/>
-        <input type="button" id="send-message" data-username="" value="Send Message">&nbsp;
-        <input type="button" id="leave-chat" data-username="" value="Leave Chat">
-    </div>
+<div class="container mx-auto pt-10">
+  <h1 class="text-black">Wonderlabs Academy Batch #1</h1>
+  <div class="chat-info mt-4"></div>
+  <div class="join-chat mt-8">
+    <form class="w-full max-w-sm">
+      <div class="flex items-center border-b border-b-2 border-purple py-2">
+        <input id="username" name="username" class="appearance-none bg-transparent border-none w-full text-grey-darker mr-3 py-1 px-2 leading-tight text-sm" type="text" placeholder="Username" aria-label="Full name">
+        <button id="join-chat" class="text-xs font-semibold rounded-full px-6 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white" type="button">Join</button>
+      </div>
+    </form>
+  </div>
+  <br/>
+  <br/>
+  <div class="chat">
+    <div class="messages shadow-md"></div>
+      <div class="message-container mt-4 appearance-none border-2 border-purple-lighter hover:border-purple rounded w-full py-2 px-4 text-grey-darker">
+        <input id="message" class="-ml-4 appearance-none hover:border-purple rounded w-5/6 py-2 px-4 text-grey-darker leading-tight" id="inline-full-name" type="text" placeholder="Enter your message here...">
+        <button type="submit" id="send-message" data-username="" class="float-right w-1/6">
+          <i class="-ml-1 fa fa-paper-plane"></i>
+        </button>
+      </div>
+      <button id="leave-chat" data-username="" class="mt-4 text-sm rounded-full px-4 py-1 leading-normal bg-purple border border-purple text-white hover:bg-white hover:text-purple" type="button">Leave Chat</button>
+  </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.6.0/socket.io.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
